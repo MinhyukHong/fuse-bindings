@@ -837,7 +837,7 @@ NAN_METHOD(OpCallback) {
             
             Nan::Utf8String dir(dirs->Get(i));
             
-            dirs_alloc[i] = (char *) malloc(1024);
+            dirs_alloc[i] = (char *) malloc(dir.length() + 1);
             strcpy(dirs_alloc[i], *dir);
           }
           
