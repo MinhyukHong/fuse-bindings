@@ -1201,6 +1201,8 @@ static int bindings_alloc () {
 
 NAN_METHOD(Mount) {
   if (!info[0]->IsString()) return Nan::ThrowError("mnt must be a string");
+  if (Nan::Utf8String(info[0]).length() >= (int) sizeof(bindings_mounted[0]->mnt))
+    return Nan::ThrowError("mnt is too long");
 
   mutex_lock(&mutex);
   int index = bindings_alloc();
@@ -1256,7 +1258,7 @@ NAN_METHOD(Mount) {
   Local<Value> tmp[] = {Nan::New<Number>(index), Nan::New<FunctionTemplate>(OpCallback)->GetFunction()};
   b->callback = new Nan::Callback(callback_constructor->Call(2, tmp).As<Function>());
 
-  strcpy(b->mnt, *path);
+  strncpy(b->mnt, *path, sizeof(b->mnt) - 1);
   strcpy(b->mntopts, "-o");
 
   Local<Array> options = ops->Get(LOCAL_STRING("options")).As<Array>();
