@@ -1265,8 +1265,8 @@ NAN_METHOD(Mount) {
   if (options->IsArray()) {
     for (uint32_t i = 0; i < options->Length(); i++) {
       Nan::Utf8String option(options->Get(i));
-      if (strcmp(b->mntopts, "-o")) strcat(b->mntopts, ",");
-      strcat(b->mntopts, *option);
+      if (strcmp(b->mntopts, "-o")) strncat(b->mntopts, ",", sizeof(b->mntopts) - strlen(b->mntopts) - 1);
+      strncat(b->mntopts, *option, sizeof(b->mntopts) - strlen(b->mntopts) - 1);
     }
   }
 
