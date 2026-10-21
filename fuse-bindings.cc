@@ -859,7 +859,10 @@ NAN_METHOD(OpCallback) {
       case OP_READLINK: {
         if (info.Length() > 2 && info[2]->IsString()) {
           Nan::Utf8String path(info[2]);
-          strcpy((char *) b->data, *path);
+          if (b->length > 0) {
+            strncpy((char *) b->data, *path, b->length - 1);
+            ((char *) b->data)[b->length - 1] = '\0';
+          }
         }
       }
       break;
